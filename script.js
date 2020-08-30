@@ -13,7 +13,6 @@ function displayLoader(val) {
     } else {
         loader.hidden = true
         quoteContainer.hidden = false
-        if(counter > 0 && quoteText.innerText) counter = 0 //setting the counter to 0 once the quote loads after erroring out initially
     }
 }
 
@@ -21,8 +20,6 @@ async function getQuote() {
     displayLoader(true)// show the loader initially while the quote loads
     const proxyUrl = "https://gentle-shelf-44309.herokuapp.com/"
     const fetchUrl = "http://api.forismatic.com/api/1.0/?method=getQuote&format=json&lang=en"
-    quoteText.innerText = "" //setting it as empty initially for clearing out the field
-    quoteAuthor.innerText = "" //setting it as empty initially for clearing out the field
 
     try {   
         const response = await fetch(proxyUrl+fetchUrl)
@@ -38,10 +35,10 @@ async function getQuote() {
         quoteAuthor.innerText = data.quoteAuthor ? data.quoteAuthor : 'Unknown' //If the author is '' setting it to unknown
         displayLoader(false)// hide the loader once the quote is loaded
     } catch(error) {
-        console.log(error)
-        if(count < 10) getQuote()
+        counter++
+        console.log(counter,error)
+        if(counter < 10) getQuote()
         else alert("Oopsie Woopsie the quotes cannot be shown, please refresh the page or try again later")
-        count++
     }     
 }
 
